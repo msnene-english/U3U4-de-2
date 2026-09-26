@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+    <html lang="vi">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rU3U4 đề 2</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; position: relative; z-index: 1; }
+        .watermark { position: absolute; top: 30px; left: 0; right: 0; text-align: center; font-size: 50px; color: rgba(0, 0, 0, 0.04); font-weight: bold; pointer-events: none; z-index: -1; user-select: none; }
+        .watermark div { transform: rotate(-30deg); margin: 200px 0; }
+        h1, h2 { color: #2c3e50; text-align: center; }
+        .screen { display: none; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .screen.active { display: block; }
+        
+        input[type="text"] { width: 100%; padding: 12px; margin: 10px 0 20px; border: 2px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; transition: border-color 0.3s; }
+        input[type="text"]:focus { border-color: #3498db; outline: none; }
+        
+        button { background: #3498db; color: #fff; border: none; padding: 12px 24px; font-size: 16px; border-radius: 6px; cursor: pointer; transition: background 0.3s, transform 0.1s; }
+        button:hover { background: #2980b9; }
+        button:active { transform: scale(0.98); }
+        button:disabled { background: #95a5a6; cursor: not-allowed; }
+        
+        .question-block { margin-bottom: 25px; padding: 15px; background: #f9f9f9; border-left: 4px solid #3498db; border-radius: 0 8px 8px 0; }
+        .instruction-box { margin-bottom: 15px; padding: 10px 15px; background: #e8f4fd; border: 1px solid #b6d4fe; border-radius: 6px; font-weight: bold; color: #004085; }
+        .question-text { font-weight: 500; margin-bottom: 15px; font-size: 16px; line-height: 1.8; }
+        
+        .options { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .option { padding: 12px 15px; background: #fff; border: 2px solid #eee; border-radius: 8px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; }
+        .option:hover { border-color: #3498db; background: #f8faff; }
+        .option.selected { border-color: #3498db; background: #ebf5ff; }
+        .option.correct-opt { border-color: #2ecc71; background: #eafaf1; }
+        .option.wrong-opt { border-color: #e74c3c; background: #fdedec; }
+        
+        .radio-circle { width: 20px; height: 20px; border: 2px solid #ddd; border-radius: 50%; position: relative; }
+        .option.selected .radio-circle::after { content: ''; position: absolute; top: 4px; left: 4px; width: 12px; height: 12px; background: #3498db; border-radius: 50%; }
+        
+        .gap-fill-input { width: 120px !important; padding: 4px 8px !important; margin: 0 5px !important; display: inline-block !important; border: 1px solid #ccc !important; border-radius: 4px !important; font-size: 16px !important; }
+        
+        .reordering-container { display: flex; flex-direction: column; gap: 15px; }
+        .word-bank, .drop-zone { display: flex; flex-wrap: wrap; gap: 8px; min-height: 45px; padding: 10px; background: #fff; border: 2px dashed #ddd; border-radius: 8px; }
+        .word-chip { padding: 8px 16px; background: #3498db; color: #fff; border-radius: 20px; cursor: pointer; user-select: none; font-weight: 500; transition: transform 0.1s; }
+        .word-chip:active { transform: scale(0.95); }
+        .word-chip.correct { background: #2ecc71; }
+        .word-chip.wrong { background: #e74c3c; }
+        
+        .rewrite-input { width: 100%; height: 80px; padding: 12px; border: 2px solid #ddd; border-radius: 6px; resize: vertical; font-size: 16px; font-family: inherit; }
+        
+        .check-btn { margin-top: 15px; background: #3498db; font-size: 14px; padding: 8px 16px; }
+        .explanation { display: none; margin-top: 15px; padding: 15px; background: #eef2f5; border-radius: 6px; font-size: 14.5px; line-height: 1.5; color: #2c3e50; border-left: 4px solid #2ecc71; }
+        
+        .progress-bar { width: 100%; height: 10px; background: #ddd; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #2ecc71; width: 0%; transition: width 0.3s; }
+        
+        .result-details { margin-top: 20px; padding: 15px; padding-bottom: 30px; background: #f8f9fa; border-radius: 6px; text-align: left; max-height: 60vh; overflow-y: auto; font-size: 14px; }
+        .error-item { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #eee; color: #e74c3c; }
+    </style>
+    </head>
+    <body>
+    <div class="watermark">
+        <div>rU3U4 đề 2<br>GV biên soạn: Ms Chí Nên - 0852639652</div>
+        <div>rU3U4 đề 2<br>GV biên soạn: Ms Chí Nên - 0852639652</div>
+        <div>rU3U4 đề 2<br>GV biên soạn: Ms Chí Nên - 0852639652</div>
+        <div>rU3U4 đề 2<br>GV biên soạn: Ms Chí Nên - 0852639652</div>
+    </div>
+    
+    <div id="startScreen" class="screen active">
+        <h1>rU3U4 đề 2</h1>
+        <p style="text-align: center; color: #7f8c8d;">Nhập họ và tên của bạn để bắt đầu làm bài</p>
+        <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn A" autocomplete="off">
+        <div style="text-align: center;">
+            <button onclick="startTest()">Bắt đầu làm bài</button>
+        </div>
+    </div>
+    
+    <div id="testScreen" class="screen">
+        <h2>rU3U4 đề 2</h2>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div id="questionsContainer"></div>
+        <div style="text-align: center; margin-top: 30px;">
+            <button id="submitBtn" onclick="confirmSubmit()" style="background: #2ecc71; font-weight: bold; padding: 15px 40px;">NỘP BÀI</button>
+        </div>
+    </div>
+    
+    <div id="resultScreen" class="screen" style="text-align: center;">
+        <h1 style="color: #2ecc71; font-size: 36px;">Hoàn thành!</h1>
+        <h2 id="scoreDisplay" style="font-size: 48px; margin: 20px 0; color: #2c3e50;"></h2>
+        <p id="feedbackText" style="font-size: 18px; color: #7f8c8d;"></p>
+        <div class="result-details" id="resultDetails"></div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 50px; padding: 20px; color: #7f8c8d; font-size: 14px; border-top: 1px solid #ddd;">
+        GV biên soạn: Ms Chí Nên - 0852639652
+    </div>
+    
+    <script>
+        const testName = 'rU3U4 đề 2';
+        const quizData = [
+    {
+        "id": 1,
+        "type": "gap_fill_text",
+        "questionHTML": "<b>Questions 1–50. Word Formation</b><br>1. The club gives young players a weekly {{blank:b1}}. (ALLOW)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "allowance"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Câu lạc bộ cấp cho các cầu thủ trẻ một khoản trợ cấp hàng tuần.<br>Cấu trúc: Sau mạo từ \"a\" và tính từ \"weekly\" cần một danh từ. ALLOW (v) -> allowance (n): tiền trợ cấp."
+    },
+    {
+        "id": 2,
+        "type": "gap_fill_text",
+        "questionHTML": "2. This behaviour is not {{blank:b1}} under the rules. (ALLOW)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "allowed"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Hành vi này không được cho phép theo các quy tắc.<br>Cấu trúc: Cấu trúc bị động \"is not + V3/ed\". ALLOW (v) -> allowed: được cho phép."
+    },
+    {
+        "id": 3,
+        "type": "gap_fill_text",
+        "questionHTML": "3. The local football {{blank:b1}} organises junior leagues. (ASSOCIATE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "association"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Hiệp hội bóng đá địa phương tổ chức các giải đấu dành cho lứa tuổi thanh thiếu niên.<br>Cấu trúc: Sau tính từ \"local football\" cần một danh từ làm chủ ngữ. ASSOCIATE (v) -> association (n): hiệp hội."
+    },
+    {
+        "id": 4,
+        "type": "gap_fill_text",
+        "questionHTML": "4. She is closely {{blank:b1}} with the school sports club. (ASSOCIATE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "associated"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Cô ấy có liên quan mật thiết với câu lạc bộ thể thao của trường.<br>Cấu trúc: Cấu trúc \"be associated with\": có liên quan tới. ASSOCIATE (v) -> associated (adj): có liên quan."
+    },
+    {
+        "id": 5,
+        "type": "gap_fill_text",
+        "questionHTML": "5. The final was extremely {{blank:b1}}. (COMPETE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "competitive"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Trận chung kết diễn ra vô cùng cạnh tranh.<br>Cấu trúc: Sau động từ to be \"was\" và trạng từ \"extremely\" cần một tính từ. COMPETE (v) -> competitive (adj): mang tính cạnh tranh."
+    },
+    {
+        "id": 6,
+        "type": "gap_fill_text",
+        "questionHTML": "6. Over fifty {{blank:b1}} entered the race. (COMPETE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "competitors"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Hơn năm mươi người thi đấu đã tham gia cuộc đua.<br>Cấu trúc: Sau \"fifty\" (số lượng > 1) cần danh từ số nhiều đếm được chỉ người. COMPETE (v) -> competitors (n): những người thi đấu."
+    },
+    {
+        "id": 7,
+        "type": "gap_fill_text",
+        "questionHTML": "7. Winning the regional {{blank:b1}} was a huge achievement. (COMPETE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "competition"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Việc chiến thắng trong cuộc thi khu vực là một thành tựu to lớn.<br>Cấu trúc: Sau tính từ \"regional\" cần danh từ. COMPETE (v) -> competition (n): cuộc thi."
+    },
+    {
+        "id": 8,
+        "type": "gap_fill_text",
+        "questionHTML": "8. We had a very {{blank:b1}} afternoon at the rink. (ENJOY)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "enjoyable"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Chúng tôi đã có một buổi chiều rất thú vị tại sân trượt băng.<br>Cấu trúc: Sau trạng từ \"very\" và trước danh từ \"afternoon\" cần một tính từ. ENJOY (v) -> enjoyable (adj): thú vị."
+    },
+    {
+        "id": 9,
+        "type": "gap_fill_text",
+        "questionHTML": "9. Reading is one of my greatest sources of {{blank:b1}}. (ENJOY)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "enjoyment"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Đọc sách là một trong những nguồn vui lớn nhất của tôi.<br>Cấu trúc: Sau giới từ \"of\" cần một danh từ. ENJOY (v) -> enjoyment (n): niềm vui, sự thích thú."
+    },
+    {
+        "id": 10,
+        "type": "gap_fill_text",
+        "questionHTML": "10. You don't need expensive {{blank:b1}} to start jogging. (EQUIP)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "equipment"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Bạn không cần thiết bị đắt tiền để bắt đầu chạy bộ.<br>Cấu trúc: Sau tính từ \"expensive\" cần một danh từ. EQUIP (v) -> equipment (n): trang thiết bị (danh từ không đếm được)."
+    },
+    {
+        "id": 11,
+        "type": "gap_fill_text",
+        "questionHTML": "11. The gym is fully {{blank:b1}} for strength training. (EQUIP)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "equipped"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Phòng tập thể dục được trang bị đầy đủ cho việc tập sức mạnh.<br>Cấu trúc: Cấu trúc bị động \"is fully + V3/ed\". EQUIP (v) -> equipped: được trang bị."
+    },
+    {
+        "id": 12,
+        "type": "gap_fill_text",
+        "questionHTML": "12. {{blank:b1}}, the weather stayed dry for the final. (FORTUNE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "Fortunately"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: May mắn thay, thời tiết vẫn khô ráo cho trận chung kết.<br>Cấu trúc: Đứng đầu câu và bổ nghĩa cho cả câu cần một trạng từ mang nghĩa tích cực. FORTUNE (n) -> Fortunately (adv): May mắn thay."
+    },
+    {
+        "id": 13,
+        "type": "gap_fill_text",
+        "questionHTML": "13. It was {{blank:b1}} that she injured her ankle before the race. (FORTUNE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "unfortunate"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Thật không may khi cô ấy làm thương mắt cá chân trước cuộc đua.<br>Cấu trúc: Sau động từ to be \"was\" cần một tính từ mang nghĩa tiêu cực. FORTUNE (n) -> unfortunate (adj): không may."
+    },
+    {
+        "id": 14,
+        "type": "gap_fill_text",
+        "questionHTML": "14. The documentary was surprisingly {{blank:b1}}. (INTEREST)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "interesting"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Bộ phim tài liệu thú vị một cách đáng ngạc nhiên.<br>Cấu trúc: Chủ ngữ chỉ vật (The documentary), mô tả tính chất sự vật cần tính từ đuôi -ing. INTEREST (v/n) -> interesting (adj): thú vị."
+    },
+    {
+        "id": 15,
+        "type": "gap_fill_text",
+        "questionHTML": "15. I'm very {{blank:b1}} in photography. (INTEREST)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "interested"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Tôi rất quan tâm đến nhiếp ảnh.<br>Cấu trúc: Chủ ngữ chỉ người (I), mô tả cảm xúc cần tính từ đuôi -ed đi với giới từ \"in\". INTEREST (v/n) -> interested (adj): quan tâm."
+    },
+    {
+        "id": 16,
+        "type": "gap_fill_text",
+        "questionHTML": "16. His {{blank:b1}} of the rules is excellent. (KNOW)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "knowledge"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Kiến thức của anh ấy về các luật lệ là xuất sắc.<br>Cấu trúc: Sau tính từ sở hữu \"His\" cần một danh từ. KNOW (v) -> knowledge (n): kiến thức."
+    },
+    {
+        "id": 17,
+        "type": "gap_fill_text",
+        "questionHTML": "17. Our coach is extremely {{blank:b1}} about sports science. (KNOW)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "knowledgeable"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Huấn luyện viên của chúng tôi cực kỳ am hiểu về khoa học thể thao.<br>Cấu trúc: Sau động từ to be \"is\" và trạng từ \"extremely\" cần một tính từ đi với giới từ \"about\". KNOW (v) -> knowledgeable (adj): am hiểu."
+    },
+    {
+        "id": 18,
+        "type": "gap_fill_text",
+        "questionHTML": "18. The team suffered a heavy {{blank:b1}} in the final. (LOSE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "loss"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Đội đã phải chịu một thất bại nặng nề trong trận chung kết.<br>Cấu trúc: Sau mạo từ \"a\" và tính từ \"heavy\" cần một danh từ. LOSE (v) -> loss (n): thất bại, sự thua cuộc."
+    },
+    {
+        "id": 19,
+        "type": "gap_fill_text",
+        "questionHTML": "19. Nobody wants to be called a bad {{blank:b1}}. (LOSE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "loser"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Không ai muốn bị gọi là một kẻ thua cuộc tồi tệ.<br>Cấu trúc: Sau mạo từ \"a\" và tính từ \"bad\" cần danh từ chỉ người. LOSE (v) -> loser (n): kẻ thua cuộc."
+    },
+    {
+        "id": 20,
+        "type": "gap_fill_text",
+        "questionHTML": "20. The swimming pool is closed for essential {{blank:b1}}. (MAINTAIN)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "maintenance"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Hồ bơi đóng cửa để bảo trì cần thiết.<br>Cấu trúc: Sau tính từ \"essential\" cần một danh từ. MAINTAIN (v) -> maintenance (n): sự bảo trì."
+    },
+    {
+        "id": 21,
+        "type": "gap_fill_text",
+        "questionHTML": "21. The bronze {{blank:b1}} thanked her trainer. (MEDAL)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "medallist"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Người giành huy chương đồng đã cảm ơn huấn luyện viên của cô ấy.<br>Cấu trúc: Sau tính từ \"bronze\" (bằng đồng) cần danh từ chỉ người nhận giải thưởng. MEDAL (n) -> medallist / medalist (n): người giành huy chương."
+    },
+    {
+        "id": 22,
+        "type": "gap_fill_text",
+        "questionHTML": "22. Our main {{blank:b1}} is a very experienced player. (OPPOSE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "opponent"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Đối thủ chính của chúng ta là một người chơi rất giàu kinh nghiệm.<br>Cấu trúc: Sau tính từ \"main\" cần danh từ chỉ người. OPPOSE (v) -> opponent (n): đối thủ."
+    },
+    {
+        "id": 23,
+        "type": "gap_fill_text",
+        "questionHTML": "23. There was strong {{blank:b1}} to the plan. (OPPOSE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "opposition"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Có sự phản đối mạnh mẽ đối với kế hoạch.<br>Cấu trúc: Sau tính từ \"strong\" cần một danh từ. OPPOSE (v) -> opposition (n): sự phản đối."
+    },
+    {
+        "id": 24,
+        "type": "gap_fill_text",
+        "questionHTML": "24. Regular {{blank:b1}} is essential if you want to improve. (PRACTISE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "practice"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Sự luyện tập thường xuyên là cần thiết nếu bạn muốn cải thiện.<br>Cấu trúc: Sau tính từ \"Regular\" cần một danh từ làm chủ ngữ. PRACTISE (v) -> practice (n): sự luyện tập."
+    },
+    {
+        "id": 25,
+        "type": "gap_fill_text",
+        "questionHTML": "25. This exercise is highly {{blank:b1}} for beginners. (PRACTICE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "practical"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Bài tập này có tính thực tế cao đối với người mới bắt đầu.<br>Cấu trúc: Sau trạng từ \"highly\" cần một tính từ. PRACTICE (n/v) -> practical (adj): thực tế, thiết thực."
+    },
+    {
+        "id": 26,
+        "type": "gap_fill_text",
+        "questionHTML": "26. The team's new {{blank:b1}} has introduced a stricter routine. (TRAIN)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "trainer"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Huấn luyện viên mới của đội đã đưa ra một thói quen nghiêm ngặt hơn.<br>Cấu trúc: Sau tính từ \"new\" cần danh từ chỉ người làm chủ ngữ. TRAIN (v) -> trainer (n): huấn luyện viên."
+    },
+    {
+        "id": 27,
+        "type": "gap_fill_text",
+        "questionHTML": "27. All new {{blank:b1}} attend a safety session. (TRAIN)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "trainees"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Tất cả các thực tập sinh/người được huấn luyện mới đều tham dự một buổi về an toàn.<br>Cấu trúc: Sau \"All new\" cần danh từ số nhiều chỉ người. TRAIN (v) -> trainees (n): người được huấn luyện, thực tập sinh."
+    },
+    {
+        "id": 28,
+        "type": "gap_fill_text",
+        "questionHTML": "28. The players need more {{blank:b1}} before the tournament. (TRAIN)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "training"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Các cầu thủ cần luyện tập nhiều hơn trước giải đấu.<br>Cấu trúc: Sau \"more\" cần danh từ không đếm được. TRAIN (v) -> training (n): sự luyện tập."
+    },
+    {
+        "id": 29,
+        "type": "gap_fill_text",
+        "questionHTML": "29. The two clubs announced a new sporting {{blank:b1}}. (ASSOCIATE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "association"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Hai câu lạc bộ đã công bố một hiệp hội/sự hợp tác thể thao mới.<br>Cấu trúc: Sau tính từ \"sporting\" cần danh từ. ASSOCIATE (v) -> association (n): hiệp hội, sự liên kết."
+    },
+    {
+        "id": 30,
+        "type": "gap_fill_text",
+        "questionHTML": "30. She answered the question {{blank:b1}}. (KNOW)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "knowingly"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Cô ấy đã trả lời câu hỏi một cách có hiểu biết/chủ ý.<br>Cấu trúc: Bổ nghĩa cho động từ \"answered\" cần một trạng từ. KNOW (v) -> knowingly (adv): cố ý, một cách am hiểu."
+    },
+    {
+        "id": 31,
+        "type": "gap_fill_text",
+        "questionHTML": "31. The rules were almost {{blank:b1}} to beginners. (KNOW)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "unknown"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Các quy tắc dường như là vô danh/không được biết đến đối với người mới bắt đầu.<br>Cấu trúc: Sau trạng từ \"almost\" cần tính từ mang nghĩa phủ định phù hợp ngữ cảnh. KNOW (v) -> unknown (adj): không được biết tới."
+    },
+    {
+        "id": 32,
+        "type": "gap_fill_text",
+        "questionHTML": "32. The match was {{blank:b1}} close. (COMPETE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "competitively"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Trận đấu diễn ra một cách cạnh tranh sát sao.<br>Cấu trúc: Bổ nghĩa cho tính từ \"close\" cần trạng từ. COMPETE (v) -> competitively (adv): một cách cạnh tranh."
+    },
+    {
+        "id": 33,
+        "type": "gap_fill_text",
+        "questionHTML": "33. The children completed the activity {{blank:b1}}. (ENJOY)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "enjoyably"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Bọn trẻ đã hoàn thành hoạt động một cách đầy thích thú.<br>Cấu trúc: Bổ nghĩa cho động từ \"completed\" cần trạng từ. ENJOY (v) -> enjoyably (adv): một cách thú vị."
+    },
+    {
+        "id": 34,
+        "type": "gap_fill_text",
+        "questionHTML": "34. The hall is poorly {{blank:b1}} for indoor sport. (EQUIP)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "equipped"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Hội trường được trang bị kém cho thể thao trong nhà.<br>Cấu trúc: Sau trạng từ \"poorly\" cần động từ dạng phân từ 2 tạo thành bị động. EQUIP (v) -> equipped: được trang bị."
+    },
+    {
+        "id": 35,
+        "type": "gap_fill_text",
+        "questionHTML": "35. {{blank:b1}}, our goalkeeper was injured. (FORTUNE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "Unfortunately"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Thật không may, thủ môn của chúng tôi đã bị thương.<br>Cấu trúc: Đứng đầu câu bổ nghĩa cho toàn câu, mang nghĩa tiêu cực. FORTUNE (n) -> Unfortunately (adv): Không may thay."
+    },
+    {
+        "id": 36,
+        "type": "gap_fill_text",
+        "questionHTML": "36. The book gives an {{blank:b1}} account of Olympic history. (INTEREST)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "interesting"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Cuốn sách cung cấp một bản tường thuật thú vị về lịch sử Olympic.<br>Cấu trúc: Sau mạo từ \"an\" và trước danh từ \"account\" cần tính từ chỉ tính chất sự vật. INTEREST (v/n) -> interesting (adj): thú vị."
+    },
+    {
+        "id": 37,
+        "type": "gap_fill_text",
+        "questionHTML": "37. The sudden {{blank:b1}} disappointed the fans. (LOSE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "loss"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Sự thất bại/mất mát đột ngột đã làm người hâm mộ thất vọng.<br>Cấu trúc: Sau tính từ \"sudden\" cần danh từ. LOSE (v) -> loss (n): thất bại, sự mất mát."
+    },
+    {
+        "id": 38,
+        "type": "gap_fill_text",
+        "questionHTML": "38. Good equipment needs regular {{blank:b1}}. (MAINTAIN)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "maintenance"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Thiết bị tốt cần được bảo trì thường xuyên.<br>Cấu trúc: Sau tính từ \"regular\" cần danh từ. MAINTAIN (v) -> maintenance (n): sự bảo trì."
+    },
+    {
+        "id": 39,
+        "type": "gap_fill_text",
+        "questionHTML": "39. Several Olympic {{blank:b1}} attended the event. (MEDAL)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "medallists"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Một số người giành huy chương Olympic đã tham dự sự kiện.<br>Cấu trúc: Sau \"Several\" cần danh từ số nhiều chỉ người. MEDAL (n) -> medallists (n): những người giành huy chương."
+    },
+    {
+        "id": 40,
+        "type": "gap_fill_text",
+        "questionHTML": "40. The {{blank:b1}} team scored first. (OPPOSE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "opposing"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Đội đối phương đã ghi bàn trước.<br>Cấu trúc: Trước danh từ \"team\" cần tính từ. OPPOSE (v) -> opposing (adj): đối lập, đối phương."
+    },
+    {
+        "id": 41,
+        "type": "gap_fill_text",
+        "questionHTML": "41. The plan is completely {{blank:b1}} for a small school. (PRACTICE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "impractical"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Kế hoạch này hoàn toàn phi thực tế đối với một ngôi trường nhỏ.<br>Cấu trúc: Sau trạng từ \"completely\" cần tính từ mang nghĩa tiêu cực phù hợp ngữ cảnh. PRACTICE (n/v) -> impractical (adj): phi thực tế."
+    },
+    {
+        "id": 42,
+        "type": "gap_fill_text",
+        "questionHTML": "42. She {{blank:b1}} every day before the championship. (PRACTICE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "practised"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Cô ấy đã luyện tập mỗi ngày trước giải vô địch.<br>Cấu trúc: Chủ ngữ \"She\" cần một động từ chia thì quá khứ đơn vì sự việc đã xảy ra trước giải vô địch (championship). PRACTICE (n) -> practised / practiced (v): luyện tập."
+    },
+    {
+        "id": 43,
+        "type": "gap_fill_text",
+        "questionHTML": "43. The {{blank:b1}} explained the warm-up routine. (TRAIN)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "trainer"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Huấn luyện viên đã giải thích thói quen khởi động.<br>Cấu trúc: Làm chủ ngữ chỉ người thực hiện hành động giải thích cần danh từ. TRAIN (v) -> trainer (n): huấn luyện viên."
+    },
+    {
+        "id": 44,
+        "type": "gap_fill_text",
+        "questionHTML": "44. A {{blank:b1}} athlete usually earns money from the sport. (PROFESSION)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "professional"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Một vận động viên chuyên nghiệp thường kiếm tiền từ thể thao.<br>Cấu trúc: Trước danh từ \"athlete\" cần tính từ. PROFESSION (n) -> professional (adj): chuyên nghiệp."
+    },
+    {
+        "id": 45,
+        "type": "gap_fill_text",
+        "questionHTML": "45. His greatest {{blank:b1}} is staying calm under pressure. (STRONG)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "strength"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Sức mạnh lớn nhất của anh ấy là giữ bình tĩnh dưới áp lực.<br>Cấu trúc: Sau tính từ \"greatest\" cần danh từ. STRONG (adj) -> strength (n): sức mạnh, điểm mạnh."
+    },
+    {
+        "id": 46,
+        "type": "gap_fill_text",
+        "questionHTML": "46. The crowd reacted with great {{blank:b1}}. (EXCITE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "excitement"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Đám đông phản ứng với sự vô cùng hào hứng.<br>Cấu trúc: Sau tính từ \"great\" cần danh từ. EXCITE (v) -> excitement (n): sự phấn khích."
+    },
+    {
+        "id": 47,
+        "type": "gap_fill_text",
+        "questionHTML": "47. The new routine improved her {{blank:b1}}. (PERFORM)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "performance"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Thói quen mới đã cải thiện hiệu suất/màn trình diễn của cô ấy.<br>Cấu trúc: Sau tính từ sở hữu \"her\" cần danh từ. PERFORM (v) -> performance (n): hiệu suất, sự trình diễn."
+    },
+    {
+        "id": 48,
+        "type": "gap_fill_text",
+        "questionHTML": "48. The club wants to increase youth {{blank:b1}}. (PARTICIPATE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "participation"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Câu lạc bộ muốn tăng cường sự tham gia của thanh thiếu niên.<br>Cấu trúc: Sau danh từ \"youth\" cần một danh từ để tạo thành danh từ ghép. PARTICIPATE (v) -> participation (n): sự tham gia."
+    },
+    {
+        "id": 49,
+        "type": "gap_fill_text",
+        "questionHTML": "49. She is a highly {{blank:b1}} young player. (TALENT)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "talented"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Cô ấy là một cầu thủ trẻ cực kỳ tài năng.<br>Cấu trúc: Sau trạng từ \"highly\" và trước danh từ \"young player\" cần tính từ. TALENT (n) -> talented (adj): có tài năng."
+    },
+    {
+        "id": 50,
+        "type": "gap_fill_text",
+        "questionHTML": "50. The final result was completely {{blank:b1}}. (EXPECT)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "unexpected"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Kết quả cuối cùng là hoàn toàn bất ngờ.<br>Cấu trúc: Sau trạng từ \"completely\" cần tính từ, dựa vào nghĩa ngữ cảnh là bất ngờ. EXPECT (v) -> unexpected (adj): không ngờ tới, bất ngờ."
+    },
+    {
+        "id": 51,
+        "type": "gap_fill_text",
+        "questionHTML": "<b>Questions 51–60. Word Formation – Text Completion</b><br>51. When I first joined the badminton club, I had very little {{blank:b1}} of the rules. (KNOW)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "knowledge"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Khi tôi mới tham gia câu lạc bộ cầu lông, tôi có rất ít kiến thức về luật lệ.<br>Cấu trúc: Sau định lượng từ \"little\" cần danh từ. KNOW (v) -> knowledge (n): kiến thức."
+    },
+    {
+        "id": 52,
+        "type": "gap_fill_text",
+        "questionHTML": "52. However, the coach made every session {{blank:b1}}. (ENJOY)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "enjoyable"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Tuy nhiên, huấn luyện viên đã làm cho mỗi buổi tập đều thú vị.<br>Cấu trúc: Cấu trúc \"make + O + adj\" (làm cho cái gì trở nên như thế nào). ENJOY (v) -> enjoyable (adj): thú vị."
+    },
+    {
+        "id": 53,
+        "type": "gap_fill_text",
+        "questionHTML": "53. The club already had all the necessary {{blank:b1}}. (EQUIP)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "equipment"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Câu lạc bộ đã có tất cả các thiết bị cần thiết.<br>Cấu trúc: Sau tính từ \"necessary\" cần danh từ. EQUIP (v) -> equipment (n): trang thiết bị."
+    },
+    {
+        "id": 54,
+        "type": "gap_fill_text",
+        "questionHTML": "54. After several weeks of regular {{blank:b1}}, I improved quickly. (PRACTISE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "practice"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Sau vài tuần luyện tập thường xuyên, tôi đã tiến bộ nhanh chóng.<br>Cấu trúc: Sau tính từ \"regular\" cần danh từ. PRACTISE (v) -> practice (n): sự luyện tập."
+    },
+    {
+        "id": 55,
+        "type": "gap_fill_text",
+        "questionHTML": "55. I entered my first local {{blank:b1}}. (COMPETE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "competition"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Tôi đã tham gia cuộc thi địa phương đầu tiên của mình.<br>Cấu trúc: Sau tính từ \"local\" cần danh từ. COMPETE (v) -> competition (n): cuộc thi."
+    },
+    {
+        "id": 56,
+        "type": "gap_fill_text",
+        "questionHTML": "56. My first {{blank:b1}} was much more experienced than I was. (OPPOSE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "opponent"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Đối thủ đầu tiên của tôi có nhiều kinh nghiệm hơn tôi nhiều.<br>Cấu trúc: Sau số thứ tự \"first\" cần danh từ chỉ người đóng vai trò chủ ngữ. OPPOSE (v) -> opponent (n): đối thủ."
+    },
+    {
+        "id": 57,
+        "type": "gap_fill_text",
+        "questionHTML": "57. I lost, but the {{blank:b1}} did not discourage me. (LOSE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "loss"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Tôi đã thua, nhưng thất bại đó không làm tôi nản lòng.<br>Cấu trúc: Sau mạo từ \"the\" cần danh từ đóng vai trò chủ ngữ. LOSE (v) -> loss (n): thất bại, sự thua cuộc."
+    },
+    {
+        "id": 58,
+        "type": "gap_fill_text",
+        "questionHTML": "58. {{blank:b1}}, my trainer encouraged me to keep going. (FORTUNE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "Fortunately"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: May mắn thay, huấn luyện viên của tôi đã khuyến khích tôi tiếp tục.<br>Cấu trúc: Đứng đầu câu, ngăn cách bằng dấu phẩy bổ nghĩa toàn câu, với nghĩa tích cực. FORTUNE (n) -> Fortunately (adv): May mắn thay."
+    },
+    {
+        "id": 59,
+        "type": "gap_fill_text",
+        "questionHTML": "59. A year later, I became one of the club's most {{blank:b1}} players. (COMPETE)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "competitive"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Một năm sau, tôi trở thành một trong những người chơi mang tính cạnh tranh cao nhất của câu lạc bộ.<br>Cấu trúc: Sau \"most\" và trước danh từ \"players\" cần tính từ. COMPETE (v) -> competitive (adj): mang tính cạnh tranh, có sức cạnh tranh."
+    },
+    {
+        "id": 60,
+        "type": "gap_fill_text",
+        "questionHTML": "60. My goal now is to train hard enough to become a national {{blank:b1}}. (MEDAL)",
+        "blanks": [
+            {
+                "blankId": "b1",
+                "correctAnswers": [
+                    "medallist"
+                ]
+            }
+        ],
+        "explanationHTML": "Dịch: Mục tiêu của tôi bây giờ là luyện tập đủ chăm chỉ để trở thành một người giành huy chương cấp quốc gia.<br>Cấu trúc: Sau tính từ \"national\" cần danh từ chỉ người đạt huy chương. MEDAL (n) -> medallist / medalist (n): người giành huy chương."
+    }
+];
+        
+          let state = {};
+          
+          function normalize(str) {
+              return str.replace(/\u00a0/g, ' ').replace(/[\s\n\r]+/g, ' ').trim();
+          }
+
+          function init() {
+              const container = document.getElementById('questionsContainer');
+              
+              quizData.forEach((q, index) => {
+                  state[q.id] = { checked: false, isCorrect: false, value: null };
+                  
+                  let block = document.createElement('div');
+                  block.className = 'question-block';
+                  block.id = 'q-block-' + q.id;
+                  
+                  let qText = q.questionHTML || q.question;
+                  let origText = q.originalSentenceHTML || "";
+                  
+                  // --- RENUMBERING LOGIC ---
+                  let titleStr = "";
+                  let titleMatch = qText.match(/^(<b>.*?<\/b>\s*<br\s*\/?>\s*)/i);
+                  if (titleMatch) {
+                      titleStr = titleMatch[1];
+                      qText = qText.substring(titleMatch[1].length);
+                  }
+                  
+                  // Strip leading numbers from qText
+                  qText = qText.replace(/^\d+[\.\)]?\s*/, '');
+                  
+                  // If there is original sentence (for rewriting), strip its leading number too
+                  if (origText) {
+                      origText = origText.replace(/^\d+[\.\)]?\s*/, '');
+                  }
+                  
+                  // Now prepend sequential number
+                  let questionNumberHTML = '<b>C\u00e2u ' + (index + 1) + ': </b>';
+                  
+                  if (q.type === 'sentence_rewrite' && origText) {
+                      qText = origText + '<br>' + questionNumberHTML + qText;
+                  } else {
+                      qText = questionNumberHTML + qText;
+                  }
+                  
+                  // Re-attach title
+                  qText = titleStr + qText;
+                  // ---------------------------
+                  
+                  // Wrap instruction in a nice box if it exists
+                  if (qText.startsWith('<b>') && qText.match(/^<b>(.*?)<\/b>\s*<br\s*\/?>\s*/i)) {
+                      qText = qText.replace(/^<b>(.*?)<\/b>\s*<br\s*\/?>\s*/i, '<div class="instruction-box">$1</div>');
+                  }
+                  
+                  if (q.type === 'gap_fill_text') {
+                      if (q.blanks) {
+                          q.blanks.forEach(b => {
+                              let blankStr = '{{blank:' + b.blankId + '}}';
+                              let inpStr = '<input type="text" id="input-' + q.id + '-' + b.blankId + '" class="gap-fill-input" autocomplete="off">';
+                              if (qText.includes(blankStr)) {
+                                  qText = qText.replace(blankStr, inpStr);
+                              } else {
+                                  qText += ' ' + inpStr;
+                              }
+                          });
+                      }
+                  }
+                  
+                  // Conditional italics stripping for "từ thừa" ONLY
+                  let checkStr = qText.toLowerCase();
+                  if (checkStr.includes('find the extra word') || checkStr.includes('từ thừa') || checkStr.includes('từ sai') || checkStr.includes('t\u1eeb th\u1eeba')) {
+                      qText = qText.replace(/<\/?i>/gi, '');
+                  }
+                  
+                  let html = '<div class="question-text">' + qText + '</div>';
+                  
+                  if (q.type === 'multiple_choice' || q.type === 'mcq') {
+                      html += '<div class="options">';
+                      q.options.forEach((opt, idx) => {
+                          let optText = opt.text || opt.html || '';
+                          let label = opt.label || String.fromCharCode(65 + idx);
+                          html += '<div class="option" data-index="' + idx + '" onclick="selectOption(\'' + q.id + '\', ' + idx + ')">';
+                          html += '<div class="radio-circle"></div>';
+                          html += '<b>' + label + '.</b> ' + optText.replace(/^[A-D]\.\s*/, '');
+                          html += '</div>';
+                      });
+                      html += '</div>';
+                  } else if (q.type === 'reordering') {
+                      html += '<div class="reordering-container">';
+                      html += '<div class="drop-zone" id="drop-' + q.id + '"></div>';
+                      html += '<div class="word-bank" id="bank-' + q.id + '">';
+                      let shuffled = [...q.words].sort(() => Math.random() - 0.5);
+                      shuffled.forEach(w => {
+                          html += '<div class="word-chip" data-token="' + w.tokenId + '" onclick="toggleWord(this, \'' + q.id + '\')">' + w.text + '</div>';
+                      });
+                      html += '</div></div>';
+                  } else if (q.type === 'sentence_rewrite') {
+                      html += '<textarea class="rewrite-input" id="input-' + q.id + '" placeholder="Nh\u1eadp c\u00e2u tr\u1ea3 l\u1eddi c\u1ee7a b\u1ea1n..."></textarea>';
+                  }
+                  
+                  // No inline "Kiểm tra" buttons anymore. They will be checked centrally or via a floating action. Wait, how do they check? 
+                  // In the original, the inline check button was removed and there's a global check button?
+                  // Wait! If there are no inline check buttons, how does the user click "Kiểm tra" 13 times?!
+                  // Wait, I DID remove the inline check buttons!
+                  // Let me check my memory. I removed them and added a "Kiểm tra câu hỏi này" feature? Or did I remove them and rely entirely on the submit button?
+                  // Oh, I remember. I removed them, but I kept ONE global check button at the bottom for single questions?
+                  // No! Wait, if I removed the inline buttons, the user CANNOT check individual questions.
+                  // BUT the user just showed a screenshot of an error report saying "Bạn mới kiểm tra 13/48 câu"!
+                  // If there are no inline check buttons, how did they check 13 questions?
+                  // Ah! They were probably testing `link2.html` or `link3.html` which I DIDN'T modify with the removed buttons!
+                  // Or they were testing `link1.html` before I removed them!
+                  
+                  // Let's restore the inline check button! But they said "Chữ kiểm tra quá to" (The check button is too big).
+                  // So I should make it small and neat!
+                  html += '<button id="check-btn-' + q.id + '" class="check-btn" onclick="checkQuestion(\'' + q.id + '\')">Ki\u1ec3m tra</button>';
+                  html += '<div id="expl-' + q.id + '" class="explanation"></div>';
+                  
+                  block.innerHTML = html;
+                  container.appendChild(block);
+              });
+          }
+          
+          function selectOption(qid, index) {
+              if (state[qid].checked) return;
+              const options = document.querySelectorAll('#q-block-' + qid + ' .option');
+              options.forEach(o => o.classList.remove('selected'));
+              options[index].classList.add('selected');
+              const q = quizData.find(x => x.id.toString() === qid.toString());
+              const label = q.options[index].label || String.fromCharCode(65 + index);
+              state[qid].value = label;
+          }
+          
+          function toggleWord(el, qid) {
+              if (state[qid].checked) return;
+              const drop = document.getElementById('drop-' + qid);
+              const bank = document.getElementById('bank-' + qid);
+              if (el.parentElement.id === bank.id) {
+                  drop.appendChild(el);
+              } else {
+                  bank.appendChild(el);
+              }
+          }
+          
+          function checkQuestion(qid, isSubmit = false) {
+              if (state[qid].checked) return;
+              const q = quizData.find(x => x.id.toString() === qid.toString());
+              if (!q) return;
+              
+              if (!isSubmit) {
+                  if (q.type === 'multiple_choice' || q.type === 'mcq') {
+                      let val = state[qid].value;
+                      if (!val) { alert("Vui l\u00f2ng ch\u1ecdn m\u1ed9t \u0111\u00e1p \u00e1n!"); return; }
+                  } else if (q.type === 'gap_fill_text') {
+                      let allFilled = true;
+                      if (q.blanks) {
+                          q.blanks.forEach(b => {
+                              const el = document.getElementById('input-' + qid + '-' + b.blankId);
+                              if (!el || !el.value.trim()) allFilled = false;
+                          });
+                      }
+                      if (!allFilled) { alert("Vui l\u00f2ng \u0111i\u1ec1n v\u00e0o t\u1ea5t c\u1ea3 ch\u1ed7 tr\u1ed1ng!"); return; }
+                  } else if (q.type === 'reordering') {
+                      const bank = document.getElementById('bank-' + qid);
+                      if (bank && bank.children.length > 0) { alert("Vui l\u00f2ng gh\u00e9p t\u1ea5t c\u1ea3 c\u00e1c t\u1eeb!"); return; }
+                  } else if (q.type === 'sentence_rewrite') {
+                      const el = document.getElementById('input-' + qid);
+                      if (!el || !el.value.trim()) { alert("Vui l\u00f2ng nh\u1eadp c\u00e2u tr\u1ea3 l\u1eddi!"); return; }
+                  }
+              }
+              
+              state[qid].checked = true;
+              
+              let checkBtn = document.getElementById('check-btn-' + qid);
+              if(checkBtn) checkBtn.disabled = true;
+              
+              const expl = document.getElementById('expl-' + qid);
+              expl.innerHTML = q.explanationHTML || q.explanation || '';
+              expl.style.display = 'block';
+              
+              let isCorrect = false;
+              let errorDetails = "";
+              
+              if (q.type === 'multiple_choice' || q.type === 'mcq') {
+                  const selectedVal = state[qid].value || "(bỏ trống)";
+                  const correctOptIndex = q.options.findIndex(o => o.isCorrect);
+                  const correctOptLabel = q.options[correctOptIndex].label || String.fromCharCode(65 + correctOptIndex);
+                  isCorrect = (selectedVal === correctOptLabel);
+                  
+                  const options = document.querySelectorAll('#q-block-' + qid + ' .option');
+                  const selectedIndex = q.options.findIndex((o, i) => (o.label || String.fromCharCode(65 + i)) === selectedVal);
+                  
+                  if (isCorrect) {
+                      if(options[correctOptIndex]) options[correctOptIndex].classList.add('correct-opt');
+                  } else {
+                      if(selectedIndex >= 0 && options[selectedIndex]) options[selectedIndex].classList.add('wrong-opt');
+                      if(options[correctOptIndex]) options[correctOptIndex].classList.add('correct-opt');
+                      errorDetails = 'C\u00e2u ' + qid + ': H\u1ecdc sinh ch\u1ecdn ' + selectedVal + ' (sai), \u0111\u00e1p \u00e1n \u0111\u00fang l\u00e0 ' + correctOptLabel;
+                  }
+              } 
+              else if (q.type === 'gap_fill_text') {
+                  let allCorrect = true;
+                  let correctAnswersArr = [];
+                  q.blanks.forEach(b => {
+                      const input = document.getElementById('input-' + qid + '-' + b.blankId);
+                      const val = input ? input.value.trim().toLowerCase() : "";
+                      let isBlankCorrect = b.correctAnswers.some(ans => ans.toLowerCase() === val);
+                      if (isBlankCorrect) {
+                          if (input) {
+                              input.style.backgroundColor = '#eafaf1';
+                              input.style.borderColor = '#2ecc71';
+                          }
+                      } else {
+                          if (input) {
+                              input.style.backgroundColor = '#fdedec';
+                              input.style.borderColor = '#e74c3c';
+                          }
+                          allCorrect = false;
+                      }
+                      correctAnswersArr.push(b.correctAnswers.join(' / '));
+                  });
+                  isCorrect = allCorrect;
+                  if (!isCorrect) {
+                      errorDetails = 'C\u00e2u ' + qid + ': \u0110i\u1ec1n sai. \u0110\u00e1p \u00e1n \u0111\u00fang: ' + correctAnswersArr.join(', ');
+                  }
+                  let ansHtml = '<div style="margin-top:10px; padding:10px; background:#f8f9fa; border-left:4px solid #2ecc71;"><b>\u0110\u00e1p \u00e1n \u0111\u00fang:</b><br>' + correctAnswersArr.map((ans, i) => (correctAnswersArr.length > 1 ? 'T\u1eeb ' + (i+1) + ': ' : '') + '<b>' + ans + '</b>').join('<br>') + '</div>';
+                  expl.innerHTML = ansHtml + expl.innerHTML;
+              }
+              else if (q.type === 'reordering') {
+                  const drop = document.getElementById('drop-' + qid);
+                  const currentOrder = Array.from(drop.children).map(c => c.getAttribute('data-token'));
+                  isCorrect = true;
+                  let correctOrderText = [];
+                  for (let i = 0; i < q.correctOrder.length; i++) {
+                      const expectedToken = q.correctOrder[i];
+                      const expectedWord = q.words.find(w => w.tokenId === expectedToken).text;
+                      correctOrderText.push(expectedWord);
+                      if (currentOrder[i] !== expectedToken) {
+                          isCorrect = false;
+                      }
+                  }
+                  if (!isCorrect) {
+                      let ansDiv = document.createElement('div');
+                      ansDiv.style.marginTop = '10px';
+                      ansDiv.innerHTML = '<div style="padding:10px; background:#eafaf1; border:2px solid #2ecc71; border-radius:6px;">' + 
+                          '<b>Th\u1ee9 t\u1ef1 \u0111\u00fang:</b><br><br>' + 
+                          correctOrderText.map(t => '<span class="word-chip correct" style="pointer-events:none;">' + t + '</span>').join('') + 
+                          '</div>';
+                      drop.parentElement.appendChild(ansDiv);
+                      errorDetails = 'C\u00e2u ' + qid + ' sai. Th\u1ef1c t\u1ebf \u0111\u00fang: ' + correctOrderText.join(' ');
+                  }
+              }
+              else if (q.type === 'sentence_rewrite') {
+                  const el = document.getElementById('input-' + qid);
+                  const val = el ? el.value.trim() : "";
+                  const normVal = normalize(val.toLowerCase());
+                  const ansArr = q.correctAnswers;
+                  
+                  isCorrect = ansArr.some(ans => {
+                      let normAns = normalize(ans.toLowerCase());
+                      if (normAns === normVal) return true;
+                      
+                      let parts = normAns.split(' ');
+                      let exactMissingPart = '';
+                      if (parts.length >= 2 && normAns) {
+                          let prefix = normalize(parts[0].replace(/^(->|\?|\u2019)\s*/, '').toLowerCase());
+                          let suffix = normalize(parts[parts.length - 1].toLowerCase());
+                          let partialAns = normalize(normAns);
+                          if (prefix) partialAns = partialAns.replace(new RegExp('^' + prefix.replace(/[.*+?^${}()|[\]\\\\]/g, '\\\\$&') + '\\\\s*'), '').trim();
+                          if (suffix) partialAns = partialAns.replace(new RegExp('\\\\s*' + suffix.replace(/[.*+?^${}()|[\]\\\\]/g, '\\\\$&') + '$'), '').trim();
+                          exactMissingPart = partialAns;
+                          if (partialAns && partialAns === normVal) return true;
+                      }
+                      return false;
+                  });
+                  
+                  let correctDisplay = ansArr[0] || '';
+                  
+                  if (isCorrect) {
+                      if(el) { el.style.backgroundColor = '#eafaf1'; el.style.borderColor = '#2ecc71'; }
+                  } else {
+                      if(el) { el.style.backgroundColor = '#fdedec'; el.style.borderColor = '#e74c3c'; }
+                      errorDetails = 'C\u00e2u ' + qid + ' sai. \u0110\u00e1p \u00e1n m\u1eabu:<br><b>' + correctDisplay + '</b>';
+                  }
+                  
+                  let ansHtml = '<div style="margin-top:10px; padding:10px; background:#f8f9fa; border-left:4px solid #2ecc71;"><b>\u0110\u00e1p \u00e1n \u0111\u00fang:</b><br>' + correctDisplay + '</div>';
+                  expl.innerHTML = ansHtml + expl.innerHTML;
+              }
+              
+              // We want errorDetails to show the Sequential Question number instead of qid!
+              // Because we just renumbered them in the UI!
+              let globalIndex = quizData.findIndex(x => x.id.toString() === qid.toString()) + 1;
+              if (errorDetails) {
+                  // Replace "Câu qid" with "Câu globalIndex"
+                  errorDetails = errorDetails.replace(new RegExp('C\u00e2u\s+' + qid + '\s*', 'i'), 'C\u00e2u ' + globalIndex + ': ');
+                  errorDetails = errorDetails.replace(new RegExp('C\u00e2u ghAcp t\u1eeb\s+' + qid + '\s*', 'i'), 'C\u00e2u ' + globalIndex + ': ');
+                  errorDetails = errorDetails.replace(new RegExp('C\u00e2u vi\u1ebft l\u1ea1i\s+' + qid + '\s*', 'i'), 'C\u00e2u ' + globalIndex + ': ');
+              }
+              
+              state[qid].isCorrect = isCorrect;
+              state[qid].errorDetails = errorDetails;
+              updateProgress();
+          }
+          
+          function updateProgress() {
+              const total = quizData.length;
+              const checkedCount = Object.values(state).filter(s => s.checked).length;
+              const pct = (checkedCount / total) * 100;
+              document.getElementById('progressFill').style.width = pct + '%';
+          }
+          
+          function confirmSubmit() {
+              const total = quizData.length;
+              const checkedCount = Object.values(state).filter(s => s.checked).length;
+              if (checkedCount < total) {
+                  if (!confirm(`B\u1ea1n m\u1edbi ki\u1ec3m tra ${checkedCount}/${total} c\u00e2u. H\u1ec7 th\u1ed1ng s\u1ebd t\u1ef1 \u0111\u1ed9ng ch\u1ea5m \u0111i\u1ec3m c\u00e1c c\u00e2u ch\u01b0a l\u00e0m l\u00e0 Sai. B\u1ea1n c\u00f3 ch\u1eafc ch\u1eafn mu\u1ed1n n\u1ed9p b\u00e0i?`)) {
+                      return;
+                  }
+              }
+              quizData.forEach(q => {
+                  if (!state[q.id].checked) {
+                      checkQuestion(q.id, true);
+                  }
+              });
+
+              submitTest();
+          }
+          
+          function submitTest() {
+              const studentName = document.getElementById('studentName').value.trim();
+              const total = quizData.length;
+              const correctCount = Object.values(state).filter(s => s.isCorrect).length;
+              const score = (correctCount / total) * 10;
+              
+              const errors = Object.values(state)
+                  .filter(s => s.checked && !s.isCorrect && s.errorDetails)
+                  .map(s => s.errorDetails);
+              const errorReport = errors.length > 0 ? errors.join('\n') : "Kh\u00f4ng c\u00f3 l\u1ed7i sai";
+              
+              document.getElementById('testScreen').classList.remove('active');
+              document.getElementById('resultScreen').classList.add('active');
+              document.querySelectorAll('input, .option, .word-chip, .check-btn').forEach(el => { el.disabled = true; el.style.pointerEvents = 'none'; el.style.opacity = '0.7'; });
+              
+              document.getElementById('scoreDisplay').innerText = score.toFixed(2) + ' / 10';
+              
+              let feedback = '';
+              if (score >= 9) feedback = 'Xu\u1ea5t s\u1eafc! B\u1ea1n n\u1eafm b\u00e0i r\u1ea5t v\u1eefng.';
+              else if (score >= 7) feedback = 'Kh\u00e1 t\u1ed1t! H\u00e3y c\u1ed1 g\u1eafng h\u01a1n m\u1ed9t ch\u00fat nh\u00e9.';
+              else if (score >= 5) feedback = '\u0110\u1ea1t y\u00eaa c\u1ea7u. B\u1ea1n c\u1ea7n \u00f4n t\u1eadp th\u00eam.';
+              else feedback = 'Ch\u01b0a \u0111\u1ea1t. B\u1ea1n c\u1ea7n xem l\u1ea1i k\u1ef9 b\u00e0i h\u1ecdc!';
+              document.getElementById('feedbackText').innerText = feedback;
+              
+              const detailsDiv = document.getElementById('resultDetails');
+              if (errors.length > 0) {
+                  detailsDiv.innerHTML = '<h3>Chi ti\u1ebft c\u00e1c c\u00e2u sai:</h3>' + 
+                      errors.map(e => '<div class="error-item">' + e + '</div>').join('');
+              } else {
+                  detailsDiv.innerHTML = '<h3 style="color:#2ecc71;">Ch\u00fac m\u1eebng b\u1ea1n \u0111\u00e3 tr\u1ea3 l\u1eddi \u0111\u00fang t\u1ea5t c\u1ea3 c\u00e1c c\u00e2u h\u1ecfi!</h3>';
+              }
+              
+              const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfZCAK2lpNE8O8Ieqwc3SI1ubr6HZDvGZR91AsSpUk8kEBqaA/formResponse';
+              const formData = new FormData();
+              formData.append('entry.1861648410', studentName);
+              formData.append('entry.1691800437', score.toFixed(2));
+              const plainErrorReport = errorReport.replace(/<[^>]*>?/gm, '');
+              formData.append('entry.639295732', plainErrorReport);
+              formData.append('entry.370465671', testName);
+              
+              fetch(formUrl, {
+                  method: 'POST',
+                  mode: 'no-cors',
+                  body: formData
+              }).then(() => {
+                  window.scrollTo(0, 0);
+              }).catch(err => {
+                  alert('C\u00f3 l\u1ed7i khi g\u1eedi k\u1ebft qu\u1ea3. Vui l\u00f2ng th\u1eed l\u1ea1i!');
+                  console.error(err);
+              });
+          }
+          
+          
+          function startTest() {
+              const nameInput = document.getElementById('studentName').value.trim();
+              if (!nameInput) {
+                  alert('Vui l\u00f2ng nh\u1eadp h\u1ecd v\u00e0 t\u00ean c\u1ee7a b\u1ea1n!');
+                  document.getElementById('studentName').focus();
+                  return;
+              }
+              document.getElementById('startScreen').classList.remove('active');
+              document.getElementById('testScreen').classList.add('active');
+              window.scrollTo(0, 0);
+          }
+
+          init();
+
+
+
+    </script>
+    </body>
+    </html>
+    
